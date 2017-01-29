@@ -1,0 +1,12 @@
+machine:
+  java:
+    version:
+      openjdk8
+  environment:
+    TERM: dumb
+    ENV_NAME: build
+
+#general:
+#  artifacts:
+
+
