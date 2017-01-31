@@ -1,61 +1,42 @@
 package net.eldiosantos.cloudstorage.dropbox.service;
 
+import com.google.gson.Gson;
 import net.eldiosantos.cloudstorage.config.DropboxConfiguration;
 import net.eldiosantos.cloudstorage.config.StorageConfiguration;
+import net.eldiosantos.cloudstorage.dropbox.pojo.ListFoldersRequest;
+import net.eldiosantos.cloudstorage.dropbox.pojo.ListFoldersResponse;
+import net.eldiosantos.cloudstorage.dropbox.service.request.DropboxRequestClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.stream.Collectors;
+import java.util.Collections;
 
 /**
  * Created by esjunior on 30/01/2017.
  */
 public class DropboxAccess {
 
-    private final StorageConfiguration config;
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+
+    private final DropboxRequestClient client;
+    private final Gson gson = new Gson();
 
     public DropboxAccess() {
-        config = StorageConfiguration.apply();
+        client = new DropboxRequestClient(new Gson(), StorageConfiguration.apply().dropbox());
+    }
+
+    public DropboxAccess(DropboxRequestClient client) {
+        this.client = client;
     }
 
     public DropboxAccess(StorageConfiguration config) {
-        this.config = config;
+        this.client = new DropboxRequestClient(new Gson(), StorageConfiguration.apply().dropbox());
     }
 
-    public void test() throws Exception {
-        final DropboxConfiguration _config = config.dropbox();
+    public ListFoldersResponse list(final ListFoldersRequest request) throws Exception {
+        String content = client.makeRequest(request, "/files/list_folder", "POST", Collections.emptyMap());
 
-        final String _url = _config.url();
-
-        final URL url = new URL(_url + "/users/get_current_account");
-
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        conn.setDoInput(true);
-        conn.setDoOutput(true);
-        conn.setRequestMethod("post");
-        conn.setRequestProperty("Authorization", "Bearer <OAUTH2_ACCESS_TOKEN>".replace("<OAUTH2_ACCESS_TOKEN>", _config.accessToken()));
-
-        conn.connect();
-
-        String content;
-
-        try(BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream()))) {
-            writer.append("{\"path\": \"/\",\"recursive\": false,\"include_media_info\": true,\"include_deleted\": false,\"include_has_explicit_shared_members\": true}");
-        }
-
-        try(BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()))) {
-            content = in.lines()
-                .collect(Collectors.joining("\n"));
-        }
-
-        System.out.println(content);
-
-
+        return gson.fromJson(content, ListFoldersResponse.class);
     }
+
 }

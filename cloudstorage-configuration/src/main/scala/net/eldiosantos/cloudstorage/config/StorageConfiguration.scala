@@ -12,7 +12,7 @@ class StorageConfiguration(_config: Config) {
 class DropboxConfiguration(val _config: Config) {
   val appKey = _config.getString("app-key")
   val appSecret = _config.getString("app-secret")
-  val accessToken = _config.getString("app-token")
+  val accessToken = _config.getString("access-token")
   val url = _config.getString("url")
 }
 
@@ -20,11 +20,6 @@ object StorageConfiguration {
   val logger = LoggerFactory.getLogger(getClass)
   val conf = ConfigFactory.load()
   val _conf = new StorageConfiguration(conf.getConfig("storage"))
-
-  logger.info(_conf.toString)
-
-  println(conf.entrySet().toString)
-  logger.info(conf.entrySet().toString)
 
   def apply(): StorageConfiguration = _conf
 }
