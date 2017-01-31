@@ -1,19 +1,28 @@
 package net.eldiosantos.cloudstorage.config
 
 import com.typesafe.config.{Config, ConfigFactory}
+import org.slf4j.LoggerFactory
 
 class StorageConfiguration(_config: Config) {
   val dropbox = new DropboxConfiguration(_config.getConfig("dropbox"))
 }
 
-class DropboxConfiguration(val _appKey: String, val _appSecret: String, val _accessToken: String) {
-  val appKey = _appKey;
-  val appSecret = _appSecret;
-  val accessToken = _accessToken
+class DropboxConfiguration(val _config: Config) {
+  val appKey = _config.getString("app-key")
+  val appSecret = _config.getString("app-secret")
+  val accessToken = _config.getString("app-token")
+  val url = _config.getString("url")
 }
 
 object StorageConfiguration {
-  val conf = new StorageConfiguration(ConfigFactory.load().getConfig("storage"))
+  val logger = LoggerFactory.getLogger(getClass)
+  val conf = ConfigFactory.load()
+  val _conf = new StorageConfiguration(conf.getConfig("storage"))
 
-  def apply(): StorageConfiguration = conf
+  logger.info(_conf.toString)
+
+  println(conf.entrySet().toString)
+  logger.info(conf.entrySet().toString)
+
+  def apply(): StorageConfiguration = _conf
 }
