@@ -6,7 +6,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.stream.Collectors;
@@ -36,11 +38,17 @@ public class DropboxAccess {
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setDoInput(true);
         conn.setDoOutput(true);
+        conn.setRequestMethod("post");
         conn.setRequestProperty("Authorization", "Bearer <OAUTH2_ACCESS_TOKEN>".replace("<OAUTH2_ACCESS_TOKEN>", _config.accessToken()));
 
         conn.connect();
 
         String content;
+
+        try(BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream()))) {
+            writer.append("{\"path\": \"/\",\"recursive\": false,\"include_media_info\": true,\"include_deleted\": false,\"include_has_explicit_shared_members\": true}");
+        }
+
         try(BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()))) {
             content = in.lines()
                 .collect(Collectors.joining("\n"));

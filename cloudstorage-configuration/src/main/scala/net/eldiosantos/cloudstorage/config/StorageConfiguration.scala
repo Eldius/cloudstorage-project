@@ -4,7 +4,9 @@ import com.typesafe.config.{Config, ConfigFactory}
 import org.slf4j.LoggerFactory
 
 class StorageConfiguration(_config: Config) {
-  val dropbox = new DropboxConfiguration(_config.getConfig("dropbox"))
+  val _dropbox = new DropboxConfiguration(_config.getConfig("dropbox"))
+
+  def dropbox(): DropboxConfiguration = _dropbox
 }
 
 class DropboxConfiguration(val _config: Config) {

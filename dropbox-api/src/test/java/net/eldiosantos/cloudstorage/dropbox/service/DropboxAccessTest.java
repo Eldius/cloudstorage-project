@@ -31,7 +31,7 @@ public class DropboxAccessTest {
         try {
             new DropboxAccess().test();
         } catch (Exception e) {
-            logger.error(StorageConfiguration._conf().toString(), e);
+            logger.error(StorageConfiguration.apply().dropbox().toString(), e);
             throw e;
         }
     }
