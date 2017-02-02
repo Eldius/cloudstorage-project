@@ -67,6 +67,15 @@ public class DropboxRequestClient {
             }
             throw new Exception(content);
         }
+        if(logger.isDebugEnabled()) {
+            logger.debug(
+                String.format(
+                    "########################################\nresponse from '%s':\nbody:\n%s\n########################################"
+                    , _url
+                    , content
+                )
+            );
+        }
         return content;
     }
 }

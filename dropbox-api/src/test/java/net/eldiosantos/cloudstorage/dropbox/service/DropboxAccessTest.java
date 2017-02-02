@@ -1,13 +1,14 @@
 package net.eldiosantos.cloudstorage.dropbox.service;
 
+import net.eldiosantos.cloudstorage.dropbox.model.Resource;
 import net.eldiosantos.cloudstorage.dropbox.pojo.ListFoldersRequest;
-import net.eldiosantos.cloudstorage.dropbox.pojo.ListFoldersResponse;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -31,7 +32,7 @@ public class DropboxAccessTest {
     @Test
     public void test1() throws Exception {
         try {
-            final ListFoldersResponse list = new DropboxAccess().list(
+            final List<Resource> list = new DropboxListService().list(
                 new ListFoldersRequest()
                     .setIncludeDeleted(false)
                     .setIncludeHasExplicitSharedMembers(true)
@@ -39,14 +40,14 @@ public class DropboxAccessTest {
                     .setPath("")
                     .setRecursive(true)
             );
-            list.getEntries().forEach(e ->
+            list.forEach(e ->
                 logger.info(
                     String.format(
                         "name: %s => %s [%s | %s]"
-                        , e.getPathDisplay()
+                        , e.getViewPath()
                         , e.getName()
-                        , resolve(() -> e.getMediaInfo().getTag()).orElseGet(() -> "")
-                        , resolve(() -> e.getMediaInfo().getMetadata().getTag()).orElseGet(() -> "")
+                        , e.getId()
+                        , e.getType()
                     )
                 )
             );
