@@ -61,7 +61,7 @@ public class AbstractDropboxRequestClient extends DropboxService {
                                             .collect(Collectors.joining("\n"))
                             )
                             .append("\nheaders:")
-                            .append(headers.entrySet().stream().map(h -> String.format("\n\t - %s: %s", h.getKey(), h.getValue())).collect(Collectors.joining()))
+                            //.append(headers.entrySet().stream().map(h -> String.format("\n\t - %s: %s", h.getKey(), h.getValue())).collect(Collectors.joining()))
                             .append(String.format("\nURL: %s\nPAYLOAD: %s", url.toString(), payload))
                             .toString()
             );
