@@ -2,6 +2,7 @@ package net.eldiosantos.cloudstorage.dropbox.service.request;
 
 import com.google.gson.Gson;
 import net.eldiosantos.cloudstorage.config.DropboxConfiguration;
+import net.eldiosantos.cloudstorage.dropbox.service.DropboxService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,8 +18,7 @@ import java.util.stream.Collectors;
 /**
  * Created by esjunior on 31/01/2017.
  */
-public class DropboxRequestClient {
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+public class DropboxRequestClient extends DropboxService {
 
     private final Gson gson;
     private final DropboxConfiguration _config;
@@ -37,7 +37,7 @@ public class DropboxRequestClient {
         conn.setDoInput(true);
         conn.setDoOutput(true);
         conn.setRequestMethod(method.toUpperCase());
-        conn.setRequestProperty("Authorization", "Bearer <OAUTH2_ACCESS_TOKEN>".replace("<OAUTH2_ACCESS_TOKEN>", _config.accessToken()));
+        conn.setRequestProperty("Authorization", String.format("Bearer %s", _config.accessToken()));
         conn.setRequestProperty("Content-Type", "application/json");
 
         headers.entrySet().forEach(e -> conn.setRequestProperty(e.getKey(), e.getValue()));
@@ -57,25 +57,24 @@ public class DropboxRequestClient {
                     .collect(Collectors.joining("\n"));
             logger.debug("RESPONSE: {}", content);
         } catch (Exception e) {
-            try(BufferedReader in = new BufferedReader(new InputStreamReader(conn.getErrorStream()))) {
-                content = new StringBuffer("[ERROR] ")
-                        .append(
-                                in.lines()
-                                        .collect(Collectors.joining("\n"))
-                        ).append(String.format("\nURL: %s\nPAYLOAD: %s", _url, payload))
-                        .toString();
-            }
-            throw new Exception(content);
+            generateException(_url, conn, payload);
+            content = "";
         }
-        if(logger.isDebugEnabled()) {
-            logger.debug(
-                String.format(
-                    "########################################\nresponse from '%s':\nbody:\n%s\n########################################"
-                    , _url
-                    , content
-                )
+        debug(_url, content);
+
+        return content;
+    }
+
+    private String generateException(String _url, HttpURLConnection conn, String payload) throws Exception {
+        try(BufferedReader in = new BufferedReader(new InputStreamReader(conn.getErrorStream()))) {
+            throw new IllegalArgumentException(
+                new StringBuffer("[ERROR] ")
+                    .append(
+                        in.lines()
+                            .collect(Collectors.joining("\n"))
+                    ).append(String.format("\nURL: %s\nPAYLOAD: %s", _url, payload))
+                    .toString()
             );
         }
-        return content;
     }
 }
