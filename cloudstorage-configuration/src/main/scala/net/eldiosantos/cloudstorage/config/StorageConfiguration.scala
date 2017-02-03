@@ -14,6 +14,7 @@ class DropboxConfiguration(val _config: Config) {
   val appSecret = _config.getString("app-secret")
   val accessToken = _config.getString("access-token")
   val url = _config.getString("url")
+  val contentUrl = _config.getString("contentUrl")
 }
 
 object StorageConfiguration {

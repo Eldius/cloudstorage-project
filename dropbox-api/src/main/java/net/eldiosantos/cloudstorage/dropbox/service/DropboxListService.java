@@ -10,13 +10,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
  * Created by esjunior on 30/01/2017.
  */
-public class DropboxListService {
+public class DropboxListService extends DropboxService {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -24,7 +26,7 @@ public class DropboxListService {
     private final Gson gson = new Gson();
 
     public DropboxListService() {
-        client = new DropboxRequestClient(new Gson(), StorageConfiguration.apply().dropbox());
+        client = new DropboxRequestClient(StorageConfiguration.apply().dropbox());
     }
 
     public DropboxListService(DropboxRequestClient client) {
@@ -32,11 +34,13 @@ public class DropboxListService {
     }
 
     public DropboxListService(StorageConfiguration config) {
-        this.client = new DropboxRequestClient(new Gson(), StorageConfiguration.apply().dropbox());
+        this.client = new DropboxRequestClient(StorageConfiguration.apply().dropbox());
     }
 
     public List<Resource> list(final ListFoldersRequest request) throws Exception {
-        String content = client.makeRequest(request, "/files/list_folder", "POST", Collections.emptyMap());
+        Map<String, String>headers = new HashMap<>();
+        headers.put("Content-Type", "application/json");
+        String content = client.makeRequest(gson.toJson(request), "/files/list_folder", "POST", headers);
 
         return gson.fromJson(content, ListFoldersResponse.class)
             .getEntries()
@@ -46,7 +50,7 @@ public class DropboxListService {
                     .setId(r.getId())
                     .setViewPath(r.getPathDisplay())
                     .setName(r.getName())
-                    .setType(r.getTag() == "folder" ? Resource.ResourceType.FOLDER : Resource.ResourceType.FILE)
+                    .setType(r.getTag().equals("folder") ? Resource.ResourceType.FOLDER : Resource.ResourceType.FILE)
             )
             .collect(Collectors.toList());
     }

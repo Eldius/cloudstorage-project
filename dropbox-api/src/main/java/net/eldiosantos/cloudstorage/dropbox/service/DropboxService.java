@@ -8,18 +8,5 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class DropboxService {
 
-    protected final Logger logger = LoggerFactory.getLogger(getClass());
 
-    protected void debug(final String url, final String content) {
-        if(logger.isDebugEnabled()) {
-            logger.debug(
-                    String.format(
-                            "########################################\nresponse from '%s':\nbody:\n%s\n########################################"
-                            , url
-                            , content
-                    )
-            );
-        }
-
-    }
 }
