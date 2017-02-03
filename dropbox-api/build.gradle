@@ -16,6 +16,12 @@ test {
         exceptionFormat = 'full'
         //events = ['standard_out', 'standard_error']
     }
+
+    systemProperty 'storage.dropbox.url', 'wrong_url'
+
+    options {
+        systemProperty "storage.dropbox.contentUrl", "wrong_url_again"
+    }
 }
 
 
@@ -50,6 +56,14 @@ junitPlatform {
     // enableStandardTestTask true
     // reportsDir file('build/test-results/junit-platform') // this is the default
     logManager 'org.apache.logging.log4j.jul.LogManager'
+}
+
+afterEvaluate {
+    def junitPlatformTestTask = tasks.getByName('junitPlatformTest')
+
+    junitPlatformTestTask.systemProperty 'storage.dropbox.app-key', System.getenv("appkey")
+    junitPlatformTestTask.systemProperty 'storage.dropbox.app-secret', System.getenv("appsecret")
+    junitPlatformTestTask.systemProperty 'storage.dropbox.access-token', System.getenv("accesstoken")
 }
 
 dependencies {

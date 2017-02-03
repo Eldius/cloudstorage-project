@@ -34,11 +34,10 @@ public class DropboxDownloadService extends DropboxService {
         this.client = new DropboxContentRequestClient(config.dropbox());
     }
 
-    public void download(final DownloadFileRequest request) throws Exception {
+    public File download(final DownloadFileRequest request) throws Exception {
         final Map<String, String>headers = new HashMap<>();
         headers.put("Dropbox-API-Arg", gson.toJson(request));
         headers.put("Content-Type", "");
-        File content = client.makeRequest("", "/files/download", "POST", headers);
-        logger.debug(String.format("[SERVICE]#################################################\nreturned file: %s\n[SERVICE]#################################################", content.getAbsolutePath()));
+        return client.makeRequest("", "/files/download", "POST", headers);
     }
 }
