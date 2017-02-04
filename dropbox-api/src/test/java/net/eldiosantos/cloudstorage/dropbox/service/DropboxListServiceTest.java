@@ -45,7 +45,7 @@ public class DropboxListServiceTest {
             logger.info(
                 String.format(
                     "name: %s => %s [%s | %s]"
-                    , e.getViewPath()
+                    , e.getPathDisplay()
                     , e.getName()
                     , e.getId()
                     , e.getType()

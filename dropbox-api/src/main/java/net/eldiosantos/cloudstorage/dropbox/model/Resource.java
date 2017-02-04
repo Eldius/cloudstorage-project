@@ -6,7 +6,7 @@ package net.eldiosantos.cloudstorage.dropbox.model;
 public class Resource {
     private String id;
     private ResourceType type;
-    private String viewPath;
+    private String pathDisplay;
     private String name;
 
     public String getId() {
@@ -27,12 +27,12 @@ public class Resource {
         return this;
     }
 
-    public String getViewPath() {
-        return viewPath;
+    public String getPathDisplay() {
+        return pathDisplay;
     }
 
-    public Resource setViewPath(String viewPath) {
-        this.viewPath = viewPath;
+    public Resource setPathDisplay(String pathDisplay) {
+        this.pathDisplay = pathDisplay;
         return this;
     }
 

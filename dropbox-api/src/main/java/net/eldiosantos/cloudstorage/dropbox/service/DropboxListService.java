@@ -9,7 +9,6 @@ import net.eldiosantos.cloudstorage.dropbox.service.request.DropboxRequestClient
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,7 +47,7 @@ public class DropboxListService extends DropboxService {
             .map(r->
                 new Resource()
                     .setId(r.getId())
-                    .setViewPath(r.getPathDisplay())
+                    .setPathDisplay(r.getPathDisplay())
                     .setName(r.getName())
                     .setType(r.getTag().equals("folder") ? Resource.ResourceType.FOLDER : Resource.ResourceType.FILE)
             )

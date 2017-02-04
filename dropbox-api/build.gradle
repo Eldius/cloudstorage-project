@@ -2,6 +2,7 @@ group 'net.eldiosantos.cloudstorage'
 version '0.0.1-SNAPSHOT'
 
 apply plugin: 'java'
+apply plugin: 'jacoco'
 
 sourceCompatibility = 1.8
 
@@ -54,8 +55,29 @@ junitPlatform {
         // includeClassNamePattern '.*Test'
     }
     // enableStandardTestTask true
-    // reportsDir file('build/test-results/junit-platform') // this is the default
+    reportsDir file('build/test-results/junit-platform') // this is the default
     logManager 'org.apache.logging.log4j.jul.LogManager'
+}
+
+tasks.whenTaskAdded { task ->
+    if (task.name.equals('junitPlatformTest')) {
+        System.out.println("ADDING TASK " + task.getName() + " to the project!")
+
+        // configure jacoco to analyze the junitPlatformTest task
+        jacoco {
+            // this tool version is compatible with
+            toolVersion = "0.7.6.201602180812"
+            applyTo task
+        }
+
+        // create junit platform jacoco task
+        project.task(type: JacocoReport, "junitPlatformJacocoReport",
+                {
+                    sourceDirectories = files("./src/main")
+                    classDirectories = files("$buildDir/classes/main")
+                    executionData task
+                })
+    }
 }
 
 afterEvaluate {
@@ -64,6 +86,30 @@ afterEvaluate {
     junitPlatformTestTask.systemProperty 'storage.dropbox.app-key', System.getenv("appkey")
     junitPlatformTestTask.systemProperty 'storage.dropbox.app-secret', System.getenv("appsecret")
     junitPlatformTestTask.systemProperty 'storage.dropbox.access-token', System.getenv("accesstoken")
+
+    generateHtmlTestReports.dependsOn(junitPlatformTestTask)
+    check.dependsOn(generateHtmlTestReports)
+
+}
+
+configurations {
+    junitXmlToHtml
+}
+
+task generateHtmlTestReports << {
+    def reportsDir = new File(buildDir, 'test-reports-ant')
+    reportsDir.mkdirs()
+
+    ant.taskdef(
+            name: 'junitReport',
+            classname: 'org.apache.tools.ant.taskdefs.optional.junit.XMLResultAggregator',
+            classpath: configurations.junitXmlToHtml.asPath
+    )
+
+    ant.junitReport(todir: "$buildDir/test-results/junit-platform", tofile: "aggregated-test-results.xml") {
+        fileset(dir: "$buildDir/test-results/junit-platform")
+        report(format: 'frames', todir: reportsDir)
+    }
 }
 
 dependencies {
@@ -82,4 +128,6 @@ dependencies {
 
     testRuntime("org.apache.logging.log4j:log4j-core:${log4jVersion}")
     testRuntime("org.apache.logging.log4j:log4j-jul:${log4jVersion}")
+
+    junitXmlToHtml 'org.apache.ant:ant-junit:1.10.0'
 }
