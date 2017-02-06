@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -50,7 +51,22 @@ class DropboxDownloadServiceTest {
     void download() throws Exception {
         final Resource resource = resourceList.get(0);
         logger.info("Trying to download '{}'", resource.getName());
-        new DropboxDownloadService(config).download(new DownloadFileRequest(resource.getId()));
+        final String destFolder = "./build/download";
+        new DropboxDownloadService(config).download(resource, destFolder);
+
+        assertTrue(Paths.get(destFolder, resource.getPathDisplay()).toFile().exists(), "Do we have the file?");
+    }
+
+    @Test
+    void download1() throws Exception {
+        final String destFolder = "./build/download_2";
+        final DropboxDownloadService service = new DropboxDownloadService(config);
+
+        resourceList.parallelStream()
+            .peek(r -> service.download(r, destFolder))
+            .forEach(r -> {
+                assertTrue(Paths.get(destFolder, r.getPathDisplay()).toFile().exists(), String.format("Do we have the file %s ", r.getName()));
+            });
     }
 
 }
