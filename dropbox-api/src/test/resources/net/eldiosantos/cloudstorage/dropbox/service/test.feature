@@ -3,5 +3,6 @@ Feature: Test the cucumber library
   To test the library usage with generic steps
 
   Scenario: Execute my test steps
-    Given the following animals: cow, horse, sheep
+    When I take an action of 'defense'
     Then I have 10 cukes in my belly
+

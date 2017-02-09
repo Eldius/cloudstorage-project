@@ -36,22 +36,37 @@ public class DropboxListService extends DropboxService {
         this.client = new DropboxRequestClient(StorageConfiguration.apply().dropbox());
     }
 
-    public List<Resource> list(final ListFoldersRequest request) throws Exception {
-        Map<String, String>headers = new HashMap<>();
-        headers.put("Content-Type", "application/json");
-        String content = client.makeRequest(gson.toJson(request), "/files/list_folder", "POST", headers);
+    public List<Resource> list(final ListFoldersRequest request) {
+        try {
+            Map<String, String> headers = new HashMap<>();
+            headers.put("Content-Type", "application/json");
+            String content = client.makeRequest(gson.toJson(request), "/files/list_folder", "POST", headers);
 
-        return gson.fromJson(content, ListFoldersResponse.class)
-            .getEntries()
-            .parallelStream()
-            .map(r->
-                new Resource()
-                    .setId(r.getId())
-                    .setPathDisplay(r.getPathDisplay())
-                    .setName(r.getName())
-                    .setType(r.getTag().equals("folder") ? Resource.ResourceType.FOLDER : Resource.ResourceType.FILE)
-            )
-            .collect(Collectors.toList());
+            return gson.fromJson(content, ListFoldersResponse.class)
+                    .getEntries()
+                    .parallelStream()
+                    .map(r ->
+                            new Resource()
+                                    .setId(r.getId())
+                                    .setPathDisplay(r.getPathDisplay())
+                                    .setName(r.getName())
+                                    .setType(r.getTag().equals("folder") ? Resource.ResourceType.FOLDER : Resource.ResourceType.FILE)
+                    )
+                    .collect(Collectors.toList());
+        } catch (Exception e) {
+            throw new IllegalStateException(String.format("Error trying to list resources from Dropbox at %s", request.getPath()), e);
+        }
+    }
+
+    public List<Resource> list(final String path) {
+        return this.list(
+            new ListFoldersRequest()
+                .setIncludeDeleted(false)
+                .setIncludeHasExplicitSharedMembers(true)
+                .setIncludeMediaInfo(true)
+                .setPath(path)
+                .setRecursive(true)
+        );
     }
 
 }

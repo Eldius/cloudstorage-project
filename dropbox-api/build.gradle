@@ -133,6 +133,10 @@ dependencies {
     testCompile group: 'info.cukes', name: 'cucumber-java8', version: '1.2.5'
     // https://mvnrepository.com/artifact/info.cukes/cucumber-junit
     testCompile group: 'info.cukes', name: 'cucumber-junit', version: '1.2.5'
+    // https://mvnrepository.com/artifact/com.google.truth/truth
+    //testCompile group: 'com.google.truth', name: 'truth', version: '0.31'
+    // https://mvnrepository.com/artifact/com.google.truth.extensions/truth-java8-extension
+    //testCompile group: 'com.google.truth.extensions', name: 'truth-java8-extension', version: '0.31'
 
     junitXmlToHtml 'org.apache.ant:ant-junit:1.10.0'
 }
