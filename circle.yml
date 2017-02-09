@@ -6,7 +6,11 @@ machine:
     TERM: dumb
     ENV_NAME: build
 
-#general:
-#  artifacts:
+general:
+  artifacts:
+    - "dropbox-api/build/cucumber/"
+    - "dropbox-api/build/test-reports-ant"
+    - "dropbox-api/build/test-results"
+    
 
 
