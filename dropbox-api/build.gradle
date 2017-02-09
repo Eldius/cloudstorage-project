@@ -87,7 +87,8 @@ afterEvaluate {
     junitPlatformTestTask.systemProperty 'storage.dropbox.app-secret', System.getenv("appsecret")
     junitPlatformTestTask.systemProperty 'storage.dropbox.access-token', System.getenv("accesstoken")
 
-    generateHtmlTestReports.dependsOn(junitPlatformTestTask)
+    junitPlatformTestTask.finalizedBy(generateHtmlTestReports)
+    //generateHtmlTestReports.dependsOn(junitPlatformTestTask)
     check.dependsOn(generateHtmlTestReports)
 
 }
