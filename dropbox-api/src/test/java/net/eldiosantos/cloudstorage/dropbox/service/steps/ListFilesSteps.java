@@ -22,9 +22,15 @@ public class ListFilesSteps implements En {
 
     private List<Resource>returnedResources;
 
+    private Class<? extends Exception> exceptionType;
+
     public ListFilesSteps() {
         When("^I look to the folder \"([^\"]*)\"$", (String path) -> {
-            returnedResources = new DropboxListService(config).list(path);
+            try {
+                returnedResources = new DropboxListService(config).list(path);
+            } catch (Exception e) {
+                exceptionType = e.getClass();
+            }
         });
 
         Then("^I have \"([^\"]*)\" files$", (Integer listSize) -> {
@@ -38,6 +44,14 @@ public class ListFilesSteps implements En {
                 , files.stream().map(r -> r.getPathDisplay()).collect(Collectors.joining("\n\t- "))
             );
             Assertions.assertTrue(listSize.equals(files.size()), String.format("Do we have %d files here?", listSize));
+        });
+
+
+        Then("^I have an \"([^\"]*)\" exception$", (String exceptionClassName) -> {
+            logger.info("Looking for exception of type {}", exceptionClassName);
+            logger.info("We had an exception of type {}", exceptionType.getName());
+            Assertions.assertNotNull(exceptionType, "We had an exception type here?");
+            Assertions.assertTrue(exceptionType.getCanonicalName().equalsIgnoreCase(exceptionClassName), "We had an exception of this type?");
         });
     }
 }
