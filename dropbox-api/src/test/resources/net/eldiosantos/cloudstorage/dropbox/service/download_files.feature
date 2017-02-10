@@ -10,3 +10,7 @@ Feature: Download files from Dropbox
     When I look for the file "/Photos/Sample Album/Boston City Flow.jpg" to folder "build/download_picture_folder"
     Then I have this file on the local filesystem "build/download_picture_folder/Photos/Sample Album/Boston City Flow.jpg"
 
+  Scenario: Downloading an unexistant file ('/invalid/dropbox/folder/invalid_file.png')
+    When I look for the file "/invalid/dropbox/folder/invalid_file.png"
+    Then I have an "java.lang.IllegalArgumentException" exception on my download attempt
+

@@ -23,13 +23,19 @@ public class DownloadFileSteps implements En {
 
     private File downloadedFile;
 
+    private Class<? extends Exception> exceptionType;
+
     public DownloadFileSteps() {
         try {
             When("^I look for the file \"([^\"]*)\"$", (String path) -> {
-                downloadedFile = new DropboxDownloadService(config).download(
-                    new Resource()
-                        .setPathDisplay(path)
-                );
+                try {
+                    downloadedFile = new DropboxDownloadService(config).download(
+                        new Resource()
+                            .setPathDisplay(path)
+                    );
+                } catch (Exception e) {
+                    exceptionType = e.getClass();
+                }
             });
 
             Then("^I have this file in my temporary folder$", () -> {
@@ -37,11 +43,15 @@ public class DownloadFileSteps implements En {
             });
 
             When("^I look for the file \"([^\"]*)\" to folder \"([^\"]*)\"$", (String remotePath, String localPath) -> {
-                downloadedFile = new DropboxDownloadService(config).download(
-                    new Resource()
-                        .setPathDisplay(remotePath)
-                    , localPath
-                );
+                try {
+                    downloadedFile = new DropboxDownloadService(config).download(
+                        new Resource()
+                            .setPathDisplay(remotePath)
+                        , localPath
+                    );
+                } catch (Exception e) {
+                    exceptionType = e.getClass();
+                }
             });
 
             Then("^I have this file on the local filesystem \"([^\"]*)\"$", (String localPath) -> {
@@ -51,6 +61,14 @@ public class DownloadFileSteps implements En {
                 Assertions.assertTrue(downloadedFile.exists(), "The downloaded file exists?");
                 Assertions.assertTrue(downloadedFile.getAbsolutePath().equals(Paths.get(localPath).toFile().getAbsolutePath()), "The file is in the right place?");
             });
+
+            Then("^I have an \"([^\"]*)\" exception on my download attempt$", (String exceptionClassName) -> {
+                logger.info("Looking for exception of type {}", exceptionClassName);
+                logger.info("We had an exception of type {}", exceptionType.getName());
+                Assertions.assertNotNull(exceptionType, "We had an exception type here?");
+                Assertions.assertTrue(exceptionType.getCanonicalName().equalsIgnoreCase(exceptionClassName), "We had an exception of this type?");
+            });
+
         } catch (Exception e) {
             logger.error("Error defining test steps for download features...", e);
         }
