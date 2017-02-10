@@ -64,19 +64,33 @@ tasks.whenTaskAdded { task ->
         System.out.println("ADDING TASK " + task.getName() + " to the project!")
 
         // configure jacoco to analyze the junitPlatformTest task
+
         jacoco {
             // this tool version is compatible with
-            toolVersion = "0.7.6.201602180812"
+            //toolVersion = "0.7.6.201602180812"
             applyTo task
         }
 
         // create junit platform jacoco task
-        project.task(type: JacocoReport, "junitPlatformJacocoReport",
-                {
-                    sourceDirectories = files("./src/main")
-                    classDirectories = files("$buildDir/classes/main")
-                    executionData task
-                })
+        project.task(
+            type: JacocoReport, "junitPlatformJacocoReport"
+            , {
+                sourceDirectories = files("src/main")
+                classDirectories = files("$buildDir/classes/main")
+                executionData task
+                jacocoTestReport {
+                    reports {
+                        xml.enabled false
+                        csv.enabled false
+                        html.destination "${buildDir}/jacocoHtml"
+                    }
+                }
+            }
+        )
+
+        task.finalizedBy("junitPlatformJacocoReport")
+
+
     }
 }
 

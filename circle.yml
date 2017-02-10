@@ -9,6 +9,7 @@ machine:
 general:
   artifacts:
     - "dropbox-api/build/applicationLogger.log"
+    - "dropbox-api/build/reports/jacoco/junitPlatformJacocoReport/html"
     - "dropbox-api/build/cucumber/"
     - "dropbox-api/build/test-reports-ant"
     - "dropbox-api/build/test-results"
