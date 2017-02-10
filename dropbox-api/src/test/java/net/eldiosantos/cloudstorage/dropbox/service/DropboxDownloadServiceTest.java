@@ -1,8 +1,7 @@
 package net.eldiosantos.cloudstorage.dropbox.service;
 
+import net.eldiosantos.cloudstorage.api.model.Resource;
 import net.eldiosantos.cloudstorage.config.StorageConfiguration;
-import net.eldiosantos.cloudstorage.dropbox.model.Resource;
-import net.eldiosantos.cloudstorage.dropbox.pojo.DownloadFileRequest;
 import net.eldiosantos.cloudstorage.dropbox.pojo.ListFoldersRequest;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

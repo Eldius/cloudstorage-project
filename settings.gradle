@@ -1,4 +1,5 @@
 rootProject.name = 'cloudstorage-project'
 include 'dropbox-api'
 include 'cloudstorage-configuration'
+include 'cloudstorage-api'
 

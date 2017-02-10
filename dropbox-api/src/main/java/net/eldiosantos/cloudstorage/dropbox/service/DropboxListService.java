@@ -1,8 +1,9 @@
 package net.eldiosantos.cloudstorage.dropbox.service;
 
 import com.google.gson.Gson;
+import net.eldiosantos.cloudstorage.api.model.Resource;
+import net.eldiosantos.cloudstorage.api.service.ListResourcesService;
 import net.eldiosantos.cloudstorage.config.StorageConfiguration;
-import net.eldiosantos.cloudstorage.dropbox.model.Resource;
 import net.eldiosantos.cloudstorage.dropbox.pojo.ListFoldersRequest;
 import net.eldiosantos.cloudstorage.dropbox.pojo.ListFoldersResponse;
 import net.eldiosantos.cloudstorage.dropbox.service.request.DropboxRequestClient;
@@ -17,7 +18,7 @@ import java.util.stream.Collectors;
 /**
  * Created by esjunior on 30/01/2017.
  */
-public class DropboxListService extends DropboxService {
+public class DropboxListService implements ListResourcesService {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -58,6 +59,7 @@ public class DropboxListService extends DropboxService {
         }
     }
 
+    @Override
     public List<Resource> list(final String path) {
         return this.list(
             new ListFoldersRequest()

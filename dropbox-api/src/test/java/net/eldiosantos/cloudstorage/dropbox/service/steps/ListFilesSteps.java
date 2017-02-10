@@ -2,7 +2,7 @@ package net.eldiosantos.cloudstorage.dropbox.service.steps;
 
 import cucumber.api.java8.En;
 import net.eldiosantos.cloudstorage.config.StorageConfiguration;
-import net.eldiosantos.cloudstorage.dropbox.model.Resource;
+import net.eldiosantos.cloudstorage.api.model.Resource;
 import net.eldiosantos.cloudstorage.dropbox.service.DropboxListService;
 import org.junit.jupiter.api.Assertions;
 import org.slf4j.Logger;

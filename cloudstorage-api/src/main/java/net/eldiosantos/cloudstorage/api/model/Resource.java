@@ -1,4 +1,4 @@
-package net.eldiosantos.cloudstorage.dropbox.model;
+package net.eldiosantos.cloudstorage.api.model;
 
 /**
  * Created by esjunior on 02/02/2017.
@@ -8,6 +8,7 @@ public class Resource {
     private ResourceType type;
     private String pathDisplay;
     private String name;
+    private String url;
 
     public String getId() {
         return id;
@@ -42,6 +43,15 @@ public class Resource {
 
     public Resource setName(String name) {
         this.name = name;
+        return this;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public Resource setUrl(String url) {
+        this.url = url;
         return this;
     }
 

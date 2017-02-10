@@ -1,7 +1,6 @@
 package net.eldiosantos.cloudstorage.dropbox.service.request;
 
 import net.eldiosantos.cloudstorage.config.DropboxConfiguration;
-import net.eldiosantos.cloudstorage.dropbox.service.DropboxService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,7 +15,7 @@ import java.util.stream.Collectors;
 /**
  * Created by esjunior on 03/02/2017.
  */
-public class AbstractDropboxRequestClient extends DropboxService {
+public class AbstractDropboxRequestClient {
 
     protected final Logger logger = LoggerFactory.getLogger(getClass());
 
