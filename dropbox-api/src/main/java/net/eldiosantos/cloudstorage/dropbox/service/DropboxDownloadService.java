@@ -36,7 +36,6 @@ public class DropboxDownloadService implements DownloadService {
         this.client = new DropboxContentRequestClient(config.dropbox());
     }
 
-    @Override
     public File download(final Resource resource, final String dest) {
 
         try {
@@ -53,12 +52,36 @@ public class DropboxDownloadService implements DownloadService {
         }
     }
 
-    @Override
     public File download(Resource resource) {
         try {
             return downloadContent(resource);
         } catch (Exception e) {
             throw new IllegalArgumentException(String.format("Error trying to get file %s", resource.getPathDisplay()), e);
+        }
+    }
+
+    @Override
+    public File download(String resource) {
+        try {
+            return download(
+                    new Resource()
+                            .setPathDisplay(resource)
+            );
+        } catch (Exception e) {
+            throw new IllegalArgumentException(String.format("Error trying to get file %s", resource), e);
+        }
+    }
+
+    @Override
+    public File download(String resource, String path) {
+        try {
+            return download(
+                new Resource()
+                    .setPathDisplay(resource)
+                , path
+            );
+        } catch (Exception e) {
+            throw new IllegalArgumentException(String.format("Error trying to get file %s", resource), e);
         }
     }
 

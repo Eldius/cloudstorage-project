@@ -1,8 +1,6 @@
 package net.eldiosantos.cloudstorage.dropbox.service.steps;
 
-import cucumber.api.PendingException;
 import cucumber.api.java8.En;
-import net.eldiosantos.cloudstorage.api.model.Resource;
 import net.eldiosantos.cloudstorage.config.StorageConfiguration;
 import net.eldiosantos.cloudstorage.dropbox.service.DropboxDownloadService;
 import org.junit.jupiter.api.Assertions;
@@ -29,11 +27,10 @@ public class DownloadFileSteps implements En {
         try {
             When("^I look for the file \"([^\"]*)\"$", (String path) -> {
                 try {
-                    downloadedFile = new DropboxDownloadService(config).download(
-                        new Resource()
-                            .setPathDisplay(path)
-                    );
+                    downloadedFile = new DropboxDownloadService(config).download(path);
+                    logger.info("Downloadded file {}", downloadedFile.getAbsolutePath());
                 } catch (Exception e) {
+                    logger.error("Error trying to download file '{}'", path, e);
                     exceptionType = e.getClass();
                 }
             });
@@ -44,18 +41,14 @@ public class DownloadFileSteps implements En {
 
             When("^I look for the file \"([^\"]*)\" to folder \"([^\"]*)\"$", (String remotePath, String localPath) -> {
                 try {
-                    downloadedFile = new DropboxDownloadService(config).download(
-                        new Resource()
-                            .setPathDisplay(remotePath)
-                        , localPath
-                    );
+                    downloadedFile = new DropboxDownloadService(config).download(remotePath, localPath);
                 } catch (Exception e) {
                     exceptionType = e.getClass();
                 }
             });
 
             Then("^I have this file on the local filesystem \"([^\"]*)\"$", (String localPath) -> {
-                logger.info("Downloaded file actual location '{}'", downloadedFile.getAbsolutePath());
+                logger.info("Downloaded file actual location '{}'", downloadedFile!=null ? downloadedFile.getAbsolutePath() : "null");
                 logger.info("Downloaded file right location '{}'", localPath);
                 Assertions.assertNotNull(downloadedFile, "We have a downloaded file, right?");
                 Assertions.assertTrue(downloadedFile.exists(), "The downloaded file exists?");
