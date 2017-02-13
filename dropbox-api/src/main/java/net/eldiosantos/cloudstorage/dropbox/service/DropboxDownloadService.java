@@ -19,21 +19,13 @@ import java.util.Map;
 /**
  * Created by esjunior on 30/01/2017.
  */
-public class DropboxDownloadService implements DownloadService {
+public class DropboxDownloadService extends DropboxService implements DownloadService {
 
     private final DropboxContentRequestClient client;
-    private final Gson gson = new Gson();
 
-    public DropboxDownloadService() {
-        client = new DropboxContentRequestClient(StorageConfiguration.apply().dropbox());
-    }
-
-    public DropboxDownloadService(DropboxContentRequestClient client) {
-        this.client = client;
-    }
-
-    public DropboxDownloadService(StorageConfiguration config) {
-        this.client = new DropboxContentRequestClient(config.dropbox());
+    public DropboxDownloadService(final StorageConfiguration config) {
+        super(config);
+        client = new DropboxContentRequestClient(config.dropbox());
     }
 
     public File download(final Resource resource, final String dest) {
@@ -91,6 +83,6 @@ public class DropboxDownloadService implements DownloadService {
         final Map<String, String> headers = new HashMap<>();
         headers.put("Dropbox-API-Arg", gson.toJson(request));
         headers.put("Content-Type", "");
-        return client.makeRequest("", "/files/download", "POST", headers);
+        return client.makeRequest("".getBytes(), "/files/download", "POST", headers);
     }
 }

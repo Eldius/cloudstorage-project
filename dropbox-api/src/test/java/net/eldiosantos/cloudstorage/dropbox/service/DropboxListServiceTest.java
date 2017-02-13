@@ -1,6 +1,7 @@
 package net.eldiosantos.cloudstorage.dropbox.service;
 
 import net.eldiosantos.cloudstorage.api.model.Resource;
+import net.eldiosantos.cloudstorage.config.StorageConfiguration;
 import net.eldiosantos.cloudstorage.dropbox.pojo.ListFoldersRequest;
 import org.junit.jupiter.api.*;
 import org.slf4j.Logger;
@@ -20,6 +21,7 @@ public class DropboxListServiceTest {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
+    private final StorageConfiguration config = StorageConfiguration.apply();
     @BeforeEach
     public void setUp() throws Exception {
 
@@ -33,7 +35,7 @@ public class DropboxListServiceTest {
     @Test
     @DisplayName("Listing a valid folder")
     public void test1() throws Exception {
-        final List<Resource> list = new DropboxListService().list(
+        final List<Resource> list = new DropboxListService(config).list(
             new ListFoldersRequest()
                 .setIncludeDeleted(false)
                 .setIncludeHasExplicitSharedMembers(true)
@@ -62,7 +64,7 @@ public class DropboxListServiceTest {
     public void test2() throws Exception {
 
         assertThrows(Exception.class, () ->
-            new DropboxListService().list(
+            new DropboxListService(config).list(
                 new ListFoldersRequest()
                     .setIncludeDeleted(false)
                     .setIncludeHasExplicitSharedMembers(true)

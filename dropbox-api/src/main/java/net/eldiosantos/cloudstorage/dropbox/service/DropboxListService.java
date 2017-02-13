@@ -18,22 +18,12 @@ import java.util.stream.Collectors;
 /**
  * Created by esjunior on 30/01/2017.
  */
-public class DropboxListService implements ListResourcesService {
-
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+public class DropboxListService extends DropboxService implements ListResourcesService {
 
     private final DropboxRequestClient client;
-    private final Gson gson = new Gson();
-
-    public DropboxListService() {
-        client = new DropboxRequestClient(StorageConfiguration.apply().dropbox());
-    }
-
-    public DropboxListService(DropboxRequestClient client) {
-        this.client = client;
-    }
 
     public DropboxListService(StorageConfiguration config) {
+        super(config);
         this.client = new DropboxRequestClient(StorageConfiguration.apply().dropbox());
     }
 

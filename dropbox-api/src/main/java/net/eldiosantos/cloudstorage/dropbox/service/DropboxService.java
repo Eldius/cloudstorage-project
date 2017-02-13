@@ -1,5 +1,7 @@
 package net.eldiosantos.cloudstorage.dropbox.service;
 
+import com.google.gson.Gson;
+import net.eldiosantos.cloudstorage.config.StorageConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -8,5 +10,13 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class DropboxService {
 
+    protected final Logger logger = LoggerFactory.getLogger(getClass());
 
+    protected final Gson gson = new Gson();
+
+    protected final StorageConfiguration config;
+
+    protected DropboxService(StorageConfiguration config) {
+        this.config = config;
+    }
 }

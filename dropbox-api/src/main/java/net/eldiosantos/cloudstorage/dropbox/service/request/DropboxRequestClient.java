@@ -47,6 +47,7 @@ public class DropboxRequestClient extends AbstractDropboxRequestClient {
 
 
         try(BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream()))) {
+            logger.debug("request:\n{}", request);
             if(request != null) {
                 writer.append(request);
             }
