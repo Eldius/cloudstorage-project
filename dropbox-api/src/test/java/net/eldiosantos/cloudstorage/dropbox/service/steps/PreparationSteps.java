@@ -2,6 +2,7 @@ package net.eldiosantos.cloudstorage.dropbox.service.steps;
 
 import cucumber.api.Scenario;
 import cucumber.api.java8.En;
+import net.eldiosantos.cloudstorage.api.model.Resource;
 import net.eldiosantos.cloudstorage.config.StorageConfiguration;
 import net.eldiosantos.cloudstorage.dropbox.service.DropboxDeleteService;
 import net.eldiosantos.cloudstorage.dropbox.service.RunCukesTest;
@@ -50,7 +51,8 @@ public class PreparationSteps implements En {
                             e.printStackTrace();
                             throw new IllegalStateException("Error trying to clean test folders");
                         }
-                    }).collect(Collectors.joining("\n\t-> "));
+                    }).map(Resource::getPathDisplay)
+                    .collect(Collectors.joining("\n\t-> "));
 
             LOGGER.info("response list:\n{}", responses);
             LOGGER.info("#########################################################################");
