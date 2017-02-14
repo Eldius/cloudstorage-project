@@ -24,7 +24,13 @@ public class TimeCounterSteps implements En {
             this.scenario = scenario;
             this.startTime = System.currentTimeMillis();
         });
-
+        Given("^I wait for \"([^\"]*)\" seconds$", (Long seconds) -> {
+            try {
+                Thread.sleep(seconds * 1000);
+            } catch (InterruptedException e) {
+                logger.error("Error while waiting for {} seconds", seconds, e);
+            }
+        });
         After(() -> {
             final Long endTime = System.currentTimeMillis();
             final Duration duration = Duration.between(Instant.ofEpochMilli(startTime), Instant.ofEpochMilli(endTime));
