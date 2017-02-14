@@ -41,6 +41,7 @@ public class PreparationSteps implements En {
             LOGGER.info("Removing test folders before scenario '{}'", scenario.getName());
             final String responses = new BufferedReader(new InputStreamReader(ClassLoader.getSystemClassLoader().getResourceAsStream("test-created-folders.txt")))
                     .lines()
+                    .filter(f -> !f.isEmpty())
                     .map(f -> {
                         try {
                             LOGGER.info("Removing folder '{}'", f);

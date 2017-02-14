@@ -7,4 +7,8 @@ Feature: Create folder feature
     And I look to the folder "/development/test-folder"
     Then I have "0" files
 
+  Scenario: Create another folder
+    When I create the folder "/development/another-test-folder"
+    Then I have this resource "/development/another-test-folder"
+
 

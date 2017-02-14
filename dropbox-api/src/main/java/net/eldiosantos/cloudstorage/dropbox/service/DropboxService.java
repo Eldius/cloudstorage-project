@@ -19,4 +19,8 @@ public abstract class DropboxService {
     protected DropboxService(StorageConfiguration config) {
         this.config = config;
     }
+
+    protected <T> T parse(final String json, final Class<T> clazz) {
+        return gson.fromJson(json, clazz);
+    }
 }
